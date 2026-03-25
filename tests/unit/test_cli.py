@@ -1,7 +1,5 @@
-import runpy
+import subprocess
 import sys
-
-import pytest
 
 from wllbe.cli import main
 
@@ -20,10 +18,11 @@ def test_main_handles_unknown_command(capsys):
     assert "unknown command: demo" in captured.out
 
 
-def test_run_module_invokes_main(monkeypatch, capsys):
-    monkeypatch.setattr(sys, "argv", ["python", "demo"])
-    with pytest.raises(SystemExit) as excinfo:
-        runpy.run_module("wllbe.cli", run_name="__main__")
-    captured = capsys.readouterr()
-    assert "unknown command: demo" in captured.out
-    assert excinfo.value.code == 2
+def test_run_module_invokes_main():
+    result = subprocess.run(
+        [sys.executable, "-m", "wllbe.cli", "demo"],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 2
+    assert "unknown command: demo" in result.stdout
