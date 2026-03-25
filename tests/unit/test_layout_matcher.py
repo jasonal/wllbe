@@ -95,6 +95,16 @@ def test_recipe_preference_trumps_ranking(comparison_spec):
     assert chosen.layout_code == "CMP-02"
 
 
+def test_explicit_override_beats_recipe_preference(comparison_spec):
+    layouts = _mock_comparison_layouts()
+    comparison_spec.deterministic_layout_override = "CMP-01"
+    recipe_rules = {"preferred_layout_codes": {"comparison": ["CMP-02"]}}
+
+    chosen = choose_layout(comparison_spec, layouts, recipe_rules=recipe_rules)
+
+    assert chosen.layout_code == "CMP-01"
+
+
 def test_capacity_filters_overfull_layout(comparison_spec):
     comparison_spec.content_blocks = [
         {"type": "bullets", "items": ["a", "b", "c", "d", "e", "f"]}
