@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import json
+import shutil
 from dataclasses import asdict
 from pathlib import Path
+from typing import Any
 
 from wllbe.domain.brief import Brief
 
@@ -38,3 +40,15 @@ class ProjectStore:
             json.dumps(asdict(brief), indent=2),
             encoding="utf-8",
         )
+
+    def write_json(self, filename: str, payload: Any) -> None:
+        self.root.mkdir(parents=True, exist_ok=True)
+        (self.root / filename).write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    def read_json(self, filename: str) -> Any:
+        return json.loads((self.root / filename).read_text(encoding="utf-8"))
+
+    def approve_artifact(self, artifact_name: str, edited_path: Path) -> None:
+        self.root.mkdir(parents=True, exist_ok=True)
+        target = self.root / f"{artifact_name}.approved.json"
+        shutil.copyfile(edited_path, target)

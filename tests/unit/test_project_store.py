@@ -29,3 +29,15 @@ def test_project_store_writes_brief_and_expected_paths(tmp_path: Path) -> None:
     assert store.page_outline_generated_path == (store.root / "page-outline.generated.json")
     assert store.page_outline_approved_path == (store.root / "page-outline.approved.json")
     assert store.slide_specs_path == (store.root / "slide-specs.json")
+
+
+def test_approve_chapter_outline_copies_user_edited_file(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "runs" / "demo")
+    store.write_json("chapter-outline.generated.json", {"chapters": [{"title": "Draft"}]})
+    edited = tmp_path / "edited.json"
+    edited.write_text('{"chapters": [{"title": "Approved"}]}', encoding="utf-8")
+
+    store.approve_artifact("chapter-outline", edited)
+
+    approved = store.read_json("chapter-outline.approved.json")
+    assert approved["chapters"][0]["title"] == "Approved"
