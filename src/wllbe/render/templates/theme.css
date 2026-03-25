@@ -1,0 +1,20 @@
+:root {{
+  --deck-bg: {bg};
+  --deck-text: {text};
+}}
+body {{
+  background-color: var(--deck-bg);
+  color: var(--deck-text);
+  font-family: "Inter", system-ui, sans-serif;
+  margin: 0;
+}}
+.deck {{
+  width: 100%;
+  min-height: 100vh;
+  padding: 2rem;
+}}
+.slide {{
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+}}
