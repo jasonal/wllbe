@@ -27,6 +27,26 @@ def test_render_version_outputs_single_html_document():
     assert "#ffffff" in html
 
 
+def test_render_version_supports_repo_style_pack_token_names():
+    html = render_version(
+        version_id="version-b",
+        slides=[
+            {
+                "slide_id": "s2",
+                "title": "Actual Style Pack",
+                "body_html": "<p>Uses catalog token names.</p>",
+            }
+        ],
+        style_pack={
+            "style_pack_id": "clean-light",
+            "tokens": {"background": "#f8fafc", "foreground": "#0f172a"},
+        },
+    )
+
+    assert "#f8fafc" in html
+    assert "#0f172a" in html
+
+
 def test_write_bundle_creates_expected_files(tmp_path: Path):
     rendered_versions = {
         "version-a": "<html>alpha</html>",

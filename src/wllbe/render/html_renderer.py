@@ -34,7 +34,9 @@ def render_slide(slide: RenderedSlide) -> str:
 def render_theme_css(style_pack: dict[str, Any]) -> str:
     """Fill theme CSS with tokens from the style pack."""
     tokens = style_pack.get("tokens", {})
+    bg = tokens.get("bg", tokens.get("background", ""))
+    text = tokens.get("text", tokens.get("foreground", ""))
     return THEME_TEMPLATE.format(
-        bg=tokens.get("bg", ""),
-        text=tokens.get("text", ""),
+        bg=bg,
+        text=text,
     )
