@@ -70,11 +70,45 @@ def _ensure_string(field_name: str, value: Any) -> str:
     return value
 
 
-def _ensure_content_blocks(page: dict[str, Any]) -> list[Any]:
+_RENDERING_KEYS = {
+    "x",
+    "y",
+    "width",
+    "height",
+    "top",
+    "bottom",
+    "left",
+    "right",
+    "color",
+    "font",
+    "theme",
+    "template-name",
+    "template",
+    "animation",
+    "animation-style",
+}
+
+
+def _ensure_content_blocks(page: dict[str, Any]) -> list[dict[str, Any]]:
     content_blocks = page.get("content_blocks", [])
     if not isinstance(content_blocks, list):
         raise ValueError("page content_blocks must be a list")
-    return content_blocks
+    return [_sanitize_content_block(block) for block in content_blocks]
+
+
+def _sanitize_content_block(block: Any) -> dict[str, Any]:
+    if not isinstance(block, dict):
+        raise ValueError("content block must be an object")
+    return {
+        key: value
+        for key, value in block.items()
+        if not _is_rendering_key(key)
+    }
+
+
+def _is_rendering_key(key: str) -> bool:
+    normalized = key.replace("_", "-").lower()
+    return normalized in _RENDERING_KEYS
 
 
 def _ensure_layout_hints(page: dict[str, Any]) -> list[Any]:

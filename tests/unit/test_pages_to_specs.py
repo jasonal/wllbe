@@ -82,3 +82,43 @@ def test_build_slide_specs_raises_on_malformed_page():
 
     with pytest.raises(ValueError, match="page payload missing required 'page_id' field"):
         build_slide_specs(page_outline)
+
+
+def test_build_slide_specs_strips_rendering_metadata_from_blocks():
+    rendering_block = {
+        "type": "bullets",
+        "items": ["Speed", "Trust"],
+        "x": 10,
+        "y": 20,
+        "width": 300,
+        "height": 200,
+        "top": 1,
+        "left": 2,
+        "color": "red",
+        "font": "Open Sans",
+        "theme": "hero",
+        "template_name": "hero",
+        "animation": "fade",
+        "animation-style": "slide",
+    }
+
+    page_outline = {
+        "pages": [
+            _sample_page("p3", "c3", content_blocks=[rendering_block])
+        ]
+    }
+
+    block = build_slide_specs(page_outline)[0].content_blocks[0]
+
+    assert block["type"] == "bullets"
+    assert block["items"] == ["Speed", "Trust"]
+    assert "x" not in block
+    assert "y" not in block
+    assert "width" not in block
+    assert "height" not in block
+    assert "color" not in block
+    assert "font" not in block
+    assert "theme" not in block
+    assert "template_name" not in block
+    assert "animation" not in block
+    assert "animation-style" not in block
