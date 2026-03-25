@@ -1,0 +1,7 @@
+{
+  "recipe_id": "bold-contrast",
+  "label": "Bold Contrast",
+  "allowed_layout_families": ["burst-grid", "panel"],
+  "motion_intensity": "high",
+  "density_target": "dense"
+}

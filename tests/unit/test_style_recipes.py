@@ -142,3 +142,20 @@ def test_build_version_plan_requires_sufficient_items(monkeypatch: pytest.Monkey
 
     with pytest.raises(ValueError):
         recipes.build_version_plan(2)
+
+
+def test_build_version_plan_with_actual_catalog_files() -> None:
+    plan = recipes.build_version_plan(2)
+
+    assert plan[0].version_id == "version-a"
+    assert plan[1].version_id == "version-b"
+    assert plan[0].recipe_id == "bold-contrast"
+    assert plan[1].recipe_id == "neutral-balanced"
+    assert plan[0].style_pack_id == "clean-light"
+    assert plan[1].style_pack_id == "dark-tech"
+    assert plan[0].allowed_layout_families == ("burst-grid", "panel")
+    assert plan[1].allowed_layout_families == ("text-led", "panel")
+    assert plan[0].motion_intensity == "high"
+    assert plan[1].motion_intensity == "calm"
+    assert plan[0].density_target == "dense"
+    assert plan[1].density_target == "medium"

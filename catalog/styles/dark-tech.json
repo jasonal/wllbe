@@ -1,0 +1,14 @@
+{
+  "style_pack_id": "dark-tech",
+  "label": "Dark Tech",
+  "tokens": {
+    "background": "#0f172a",
+    "foreground": "#f8fafc",
+    "accent": "#6366f1"
+  },
+  "motion_profile": {
+    "pace": "energetic",
+    "intensity": "medium"
+  },
+  "status": "preview"
+}
