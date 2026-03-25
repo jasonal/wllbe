@@ -8,7 +8,7 @@ from wllbe.generation.provider import FakeGenerationProvider
 
 def test_generate_page_outline_returns_page_objects():
     provider = FakeGenerationProvider.from_file(Path("tests/fixtures/providers/page_outline.json"))
-    approved_chapters = {"chapters": [{"title": "Market problem"}]}
+    approved_chapters = {"chapters": [{"chapter_id": "c1", "title": "Market problem"}]}
     result = generate_page_outline(approved_chapters, provider)
 
     assert result.pages[0].title == "The market is fragmented"
@@ -50,6 +50,51 @@ def test_generate_page_requires_page_objects():
         generate_page_outline({}, provider)
 
 
+def test_generate_page_rejects_unknown_chapter_id():
+    provider = FakeGenerationProvider(
+        responses={
+            "chapters_to_pages": {
+                "pages": [
+                    {
+                        "page_id": "p1",
+                        "chapter_id": "unknown",
+                        "title": "Title",
+                        "message": "Message",
+                        "content_blocks": [],
+                        "layout_hints": []
+                    }
+                ]
+            }
+        }
+    )
+    approved_chapters = {"chapters": [{"chapter_id": "c1", "title": "Market problem"}]}
+
+    with pytest.raises(ValueError, match="page chapter_id 'unknown' is not in approved chapters"):
+        generate_page_outline(approved_chapters, provider)
+
+
+def test_generate_page_requires_all_required_fields():
+    provider = FakeGenerationProvider(
+        responses={
+            "chapters_to_pages": {
+                "pages": [
+                    {
+                        "page_id": "p1",
+                        "chapter_id": "c1",
+                        "title": "Title",
+                        "content_blocks": [],
+                        "layout_hints": []
+                    }
+                ]
+            }
+        }
+    )
+    approved_chapters = {"chapters": [{"chapter_id": "c1", "title": "Market problem"}]}
+
+    with pytest.raises(ValueError, match="page payload missing required 'message' field"):
+        generate_page_outline(approved_chapters, provider)
+
+
 def test_generate_page_accepts_raw_text_and_validates_lists():
     provider = FakeGenerationProvider(
         responses={
@@ -68,8 +113,9 @@ def test_generate_page_accepts_raw_text_and_validates_lists():
         }
     )
 
-    result = generate_page_outline({}, provider)
-    assert result.pages[0].page_id == " p1 "
-    assert result.pages[0].chapter_id == " c1 "
+    approved_chapters = {"chapters": [{"chapter_id": "c1", "title": "Market problem"}]}
+    result = generate_page_outline(approved_chapters, provider)
+    assert result.pages[0].page_id == "p1"
+    assert result.pages[0].chapter_id == "c1"
     assert result.pages[0].content_blocks == []
     assert result.pages[0].layout_hints == []
