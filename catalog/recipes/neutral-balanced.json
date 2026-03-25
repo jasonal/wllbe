@@ -1,0 +1,8 @@
+{
+  "recipe_id": "neutral-balanced",
+  "label": "Neutral Balanced",
+  "allowed_layout_families": ["text-led", "panel"],
+  "motion_intensity": "calm",
+  "density_target": "medium",
+  "preferred_style_pack_id": "clean-light"
+}

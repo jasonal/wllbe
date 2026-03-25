@@ -1,0 +1,12 @@
+{
+  "layout_id": "section.standard",
+  "layout_code": "SEC-01",
+  "layout_label": "Standard section layout",
+  "layout_family": "section",
+  "supported_purposes": ["section"],
+  "slot_schema": ["heading", "body"],
+  "capacity_rules": {},
+  "visual_rhythm_tags": ["balanced"],
+  "style_compatibility": ["clean-light"],
+  "status": "production"
+}

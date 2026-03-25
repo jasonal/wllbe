@@ -1,0 +1,14 @@
+{
+  "style_pack_id": "clean-light",
+  "label": "Clean Light",
+  "tokens": {
+    "background": "#ffffff",
+    "foreground": "#111827",
+    "accent": "#2dd4bf"
+  },
+  "motion_profile": {
+    "pace": "steady",
+    "intensity": "low"
+  },
+  "status": "published"
+}

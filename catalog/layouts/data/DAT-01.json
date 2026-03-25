@@ -1,0 +1,12 @@
+{
+  "layout_id": "data.story",
+  "layout_code": "DAT-01",
+  "layout_label": "Data visualization layout",
+  "layout_family": "data",
+  "supported_purposes": ["data"],
+  "slot_schema": ["heading", "chart"],
+  "capacity_rules": {"bullets_max": 0},
+  "visual_rhythm_tags": ["structured"],
+  "style_compatibility": ["clean-light"],
+  "status": "production"
+}

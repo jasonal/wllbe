@@ -1,0 +1,12 @@
+{
+  "layout_id": "cover.hero",
+  "layout_code": "COV-01",
+  "layout_label": "Hero cover",
+  "layout_family": "cover",
+  "supported_purposes": ["cover"],
+  "slot_schema": ["title", "subtitle", "eyebrow"],
+  "capacity_rules": {},
+  "visual_rhythm_tags": ["hero"],
+  "style_compatibility": ["clean-light", "dark-tech"],
+  "status": "production"
+}

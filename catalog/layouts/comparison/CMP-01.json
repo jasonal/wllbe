@@ -1,0 +1,12 @@
+{
+  "layout_id": "comparison.focus",
+  "layout_code": "CMP-01",
+  "layout_label": "Comparison focus layout",
+  "layout_family": "comparison",
+  "supported_purposes": ["comparison"],
+  "slot_schema": ["heading", "bullets"],
+  "capacity_rules": {"bullets_max": 4},
+  "visual_rhythm_tags": ["balanced"],
+  "style_compatibility": ["clean-light", "dark-tech"],
+  "status": "production"
+}

@@ -1,0 +1,18 @@
+{
+  "goal": "Launch the new AI product to market leaders.",
+  "audience": "Senior Product and GTM leaders",
+  "tone": "Crisp, confident, and practical",
+  "chapters": [
+    {
+      "chapter_id": "c1",
+      "title": "Why this launch matters",
+      "intent": "Set stakes and urgency",
+      "key_points": [
+        "Market timing",
+        "AI differentiation",
+        "Revenue upside"
+      ],
+      "estimated_pages": 2
+    }
+  ]
+}
