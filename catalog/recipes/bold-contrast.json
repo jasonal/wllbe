@@ -3,5 +3,6 @@
   "label": "Bold Contrast",
   "allowed_layout_families": ["burst-grid", "panel"],
   "motion_intensity": "high",
-  "density_target": "dense"
+  "density_target": "dense",
+  "preferred_style_pack_id": "dark-tech"
 }

@@ -1,4 +1,5 @@
 import json
+import os
 from pathlib import Path
 
 import pytest
@@ -52,6 +53,7 @@ def test_load_recipe_catalog_reads_every_recipe(tmp_path: Path) -> None:
             "allowed_layout_families": ["text-led"],
             "motion_intensity": "low",
             "density_target": "medium",
+            "preferred_style_pack_id": "clean-light",
         },
     )
     _write_json(
@@ -62,6 +64,7 @@ def test_load_recipe_catalog_reads_every_recipe(tmp_path: Path) -> None:
             "allowed_layout_families": ["burst-grid"],
             "motion_intensity": "high",
             "density_target": "dense",
+            "preferred_style_pack_id": "dark-tech",
         },
     )
 
@@ -96,6 +99,7 @@ def test_build_version_plan_pairs_recipes_and_styles(monkeypatch: pytest.MonkeyP
             allowed_layout_families=("panel",),
             motion_intensity="high",
             density_target="dense",
+            preferred_style_pack_id="zebra",
         ),
         catalog.RecipeRecord(
             recipe_id="alpha-card",
@@ -103,6 +107,7 @@ def test_build_version_plan_pairs_recipes_and_styles(monkeypatch: pytest.MonkeyP
             allowed_layout_families=("panel", "grid"),
             motion_intensity="calm",
             density_target="balanced",
+            preferred_style_pack_id="alpha",
         ),
     ]
 
@@ -112,13 +117,13 @@ def test_build_version_plan_pairs_recipes_and_styles(monkeypatch: pytest.MonkeyP
     plan = recipes.build_version_plan(2)
 
     assert plan[0].version_id == "version-a"
-    assert plan[0].recipe_id == "zebra-roll"
-    assert plan[0].style_pack_id == "zebra"
+    assert plan[0].recipe_id == "alpha-card"
+    assert plan[0].style_pack_id == "alpha"
     assert plan[1].version_id == "version-b"
-    assert plan[1].recipe_id == "alpha-card"
-    assert plan[1].style_pack_id == "alpha"
-    assert plan[1].allowed_layout_families == ("panel", "grid")
-    assert plan[1].motion_intensity == "calm"
+    assert plan[1].recipe_id == "zebra-roll"
+    assert plan[1].style_pack_id == "zebra"
+    assert plan[1].allowed_layout_families == ("panel",)
+    assert plan[1].motion_intensity == "high"
 
 
 def test_build_version_plan_requires_sufficient_items(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -135,6 +140,7 @@ def test_build_version_plan_requires_sufficient_items(monkeypatch: pytest.Monkey
         allowed_layout_families=("panel",),
         motion_intensity="medium",
         density_target="medium",
+        preferred_style_pack_id="solo",
     )
 
     monkeypatch.setattr(catalog, "load_style_catalog", lambda _: [single_style])
@@ -151,11 +157,44 @@ def test_build_version_plan_with_actual_catalog_files() -> None:
     assert plan[1].version_id == "version-b"
     assert plan[0].recipe_id == "bold-contrast"
     assert plan[1].recipe_id == "neutral-balanced"
-    assert plan[0].style_pack_id == "clean-light"
-    assert plan[1].style_pack_id == "dark-tech"
+    assert plan[0].style_pack_id == "dark-tech"
+    assert plan[1].style_pack_id == "clean-light"
     assert plan[0].allowed_layout_families == ("burst-grid", "panel")
     assert plan[1].allowed_layout_families == ("text-led", "panel")
     assert plan[0].motion_intensity == "high"
     assert plan[1].motion_intensity == "calm"
     assert plan[0].density_target == "dense"
     assert plan[1].density_target == "medium"
+
+
+def test_build_version_plan_ignores_cwd(tmp_path: Path) -> None:
+    original_cwd = Path.cwd()
+    new_dir = tmp_path / "sandbox"
+    new_dir.mkdir()
+    os.chdir(new_dir)
+    try:
+        plan = recipes.build_version_plan(2)
+    finally:
+        os.chdir(original_cwd)
+
+    assert plan[0].version_id == "version-a"
+    assert plan[0].style_pack_id == "dark-tech"
+
+
+def test_load_recipe_catalog_rejects_bad_layout(tmp_path: Path) -> None:
+    recipe_dir = tmp_path / "recipes"
+    recipe_dir.mkdir()
+    _write_json(
+        recipe_dir / "bad-layout.json",
+        {
+            "recipe_id": "bad-layout",
+            "label": "Bad Layout",
+            "allowed_layout_families": "not-a-list",
+            "motion_intensity": "low",
+            "density_target": "medium",
+            "preferred_style_pack_id": "clean-light",
+        },
+    )
+
+    with pytest.raises(ValueError):
+        catalog.load_recipe_catalog(recipe_dir)
