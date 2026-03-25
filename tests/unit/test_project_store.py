@@ -1,3 +1,5 @@
+import json
+from dataclasses import asdict
 from pathlib import Path
 
 from wllbe.domain.brief import Brief
@@ -14,10 +16,14 @@ def test_project_store_writes_brief_and_expected_paths(tmp_path: Path) -> None:
         page_budget=8,
         source_materials=[],
     )
-    store.write_brief(brief, raw_text="launch a product")
+    raw_text = "launch a product"
+    store.write_brief(brief, raw_text=raw_text)
 
     assert (store.root / "brief.md").exists()
     assert (store.root / "brief.normalized.json").exists()
+    assert (store.root / "brief.md").read_text(encoding="utf-8") == raw_text
+    normalized = json.loads((store.root / "brief.normalized.json").read_text(encoding="utf-8"))
+    assert normalized == asdict(brief)
     assert store.chapter_outline_generated_path == (store.root / "chapter-outline.generated.json")
     assert store.chapter_outline_approved_path == (store.root / "chapter-outline.approved.json")
     assert store.page_outline_generated_path == (store.root / "page-outline.generated.json")
