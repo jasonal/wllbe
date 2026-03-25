@@ -86,6 +86,9 @@ _RENDERING_KEYS = {
     "template",
     "animation",
     "animation-style",
+    "style",
+    "position",
+    "layout",
 }
 
 
@@ -100,10 +103,25 @@ def _sanitize_content_block(block: Any) -> dict[str, Any]:
     if not isinstance(block, dict):
         raise ValueError("content block must be an object")
     return {
-        key: value
+        key: _sanitize_value(value)
         for key, value in block.items()
         if not _is_rendering_key(key)
     }
+
+
+def _sanitize_value(value: Any) -> Any:
+    if isinstance(value, dict):
+        sanitized: dict[str, Any] = {}
+        for key, nested in value.items():
+            if _is_rendering_key(key):
+                continue
+            sanitized[key] = _sanitize_value(nested)
+        return sanitized
+
+    if isinstance(value, list):
+        return [_sanitize_value(item) for item in value]
+
+    return value
 
 
 def _is_rendering_key(key: str) -> bool:

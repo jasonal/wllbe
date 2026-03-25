@@ -122,3 +122,32 @@ def test_build_slide_specs_strips_rendering_metadata_from_blocks():
     assert "template_name" not in block
     assert "animation" not in block
     assert "animation-style" not in block
+
+
+def test_build_slide_specs_recursively_strips_nested_rendering_metadata():
+    nested_block = {
+        "type": "image",
+        "payload": {"caption": "Growth"},
+        "style": {"color": "red", "font": "Open Sans"},
+        "position": {"x": 10, "y": 20},
+        "slots": [
+            {"name": "hero", "template_name": "cover"},
+            {"name": "badge", "template": "badge"}
+        ],
+    }
+
+    page_outline = {
+        "pages": [
+            _sample_page("p4", "c4", content_blocks=[nested_block])
+        ]
+    }
+
+    block = build_slide_specs(page_outline)[0].content_blocks[0]
+
+    assert block["type"] == "image"
+    assert block["payload"] == {"caption": "Growth"}
+    assert "style" not in block
+    assert "position" not in block
+    assert "slots" in block
+    assert block["slots"][0] == {"name": "hero"}
+    assert block["slots"][1] == {"name": "badge"}
