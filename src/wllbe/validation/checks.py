@@ -109,9 +109,11 @@ def validate_project(
     rendered_versions: dict[str, str],
     project_root: Path | str | None = None,
 ) -> ValidationReport:
+    normalized_slide_specs = list(slide_specs)
+    normalized_chosen_layouts = list(chosen_layouts)
     issues: list[ValidationIssue] = []
-    issues.extend(check_content_structure(slide_specs))
-    issues.extend(check_layout_choices(slide_specs, chosen_layouts))
+    issues.extend(check_content_structure(normalized_slide_specs))
+    issues.extend(check_layout_choices(normalized_slide_specs, normalized_chosen_layouts))
     issues.extend(check_rendered_output(rendered_versions))
     issues.extend(check_version_differences(rendered_versions))
 

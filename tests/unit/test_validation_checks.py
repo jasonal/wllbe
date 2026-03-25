@@ -49,6 +49,19 @@ def test_validate_project_flags_incompatible_override():
     assert report.issues[0].category == "layout"
 
 
+def test_validate_project_handles_generator_slide_specs_without_losing_layout_checks():
+    report = validate_project(
+        slide_specs=iter([_base_slide_spec(deterministic_layout_override="CMP-99")]),
+        chosen_layouts=[_base_layout_choice(layout_code="CMP-01")],
+        rendered_versions=_rendered_versions(
+            "<!DOCTYPE html><html><body>ok</body></html>",
+        ),
+    )
+
+    assert report.status == "failed"
+    assert any(issue.category == "layout" for issue in report.issues)
+
+
 def test_validate_project_passes_with_valid_project(tmp_path: Path):
     report = validate_project(
         slide_specs=[_base_slide_spec()],
