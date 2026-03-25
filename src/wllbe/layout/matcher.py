@@ -12,7 +12,7 @@ def choose_layout(
     layouts: list[LayoutRecord],
     recipe_rules: dict[str, Any],
 ) -> LayoutRecord:
-    if spec.deterministic_layout_override:
+    if spec.deterministic_layout_override is not None:
         return require_compatible_override(spec, layouts, spec.deterministic_layout_override)
 
     compatible = compatible_layouts(spec, layouts)
@@ -42,16 +42,18 @@ def compatible_layouts(spec: SlideSpec, layouts: list[LayoutRecord]) -> list[Lay
 
 
 def require_compatible_override(
-    spec: SlideSpec, layouts: list[LayoutRecord], override_code: str
+    spec: SlideSpec, layouts: list[LayoutRecord], override_code: Any
 ) -> LayoutRecord:
+    code = _validate_override_code(override_code)
     override_layout = next(
-        (layout for layout in layouts if layout.layout_code == override_code), None
+        (layout for layout in layouts if layout.layout_code == code), None
     )
     if override_layout is None:
-        raise ValueError(f"Unknown layout override '{override_code}'")
+        raise ValueError(f"Unknown layout override '{code}'")
 
-    if override_layout not in compatible_layouts(spec, layouts):
-        raise ValueError(f"Explicit layout override '{override_code}' is incompatible with the spec")
+    compatible = compatible_layouts(spec, layouts)
+    if override_layout not in compatible:
+        raise ValueError(f"Explicit layout override '{code}' is incompatible with the spec")
 
     return override_layout
 
@@ -99,3 +101,13 @@ def _content_respects_capacity(spec: SlideSpec, layout: LayoutRecord) -> bool:
     if bullets_max is not None and bullets > bullets_max:
         return False
     return True
+
+
+def _validate_override_code(value: Any) -> str:
+    if not isinstance(value, str):
+        raise ValueError(
+            f"deterministic layout override must be a string, got {type(value).__name__} ({value!r})"
+        )
+    if value == "":
+        raise ValueError("deterministic layout override must be a non-empty string")
+    return value

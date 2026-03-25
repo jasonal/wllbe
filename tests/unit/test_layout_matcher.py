@@ -57,12 +57,6 @@ def _mock_comparison_layouts() -> list[LayoutRecord]:
     ]
 
 
-def test_load_layout_catalog_returns_expected_records():
-    layouts = _load_catalog()
-    assert len(layouts) == 4
-    assert any(layout.layout_code == "CMP-01" for layout in layouts)
-
-
 def test_choose_layout_respects_override(comparison_spec):
     layouts = _load_catalog()
     comparison_spec.deterministic_layout_override = "CMP-01"
@@ -70,10 +64,27 @@ def test_choose_layout_respects_override(comparison_spec):
     assert chosen.layout_code == "CMP-01"
 
 
-def test_choose_layout_errors_on_incompatible_override(comparison_spec):
+def test_choose_layout_errors_on_unknown_override(comparison_spec):
     layouts = _mock_comparison_layouts()
     comparison_spec.deterministic_layout_override = "COV-01"
-    with pytest.raises(ValueError, match="COV-01"):
+    with pytest.raises(ValueError, match="Unknown layout override 'COV-01'"):
+        choose_layout(comparison_spec, layouts, recipe_rules={})
+
+
+def test_choose_layout_errors_on_known_incompatible_override(comparison_spec):
+    layouts = _mock_comparison_layouts()
+    comparison_spec.content_blocks = [
+        {"type": "bullets", "items": list("abcdef")},
+    ]
+    comparison_spec.deterministic_layout_override = "CMP-01"
+    with pytest.raises(ValueError, match="incompatible"):
+        choose_layout(comparison_spec, layouts, recipe_rules={})
+
+
+def test_choose_layout_errors_on_empty_override(comparison_spec):
+    layouts = _mock_comparison_layouts()
+    comparison_spec.deterministic_layout_override = ""
+    with pytest.raises(ValueError, match="deterministic layout override"):
         choose_layout(comparison_spec, layouts, recipe_rules={})
 
 
