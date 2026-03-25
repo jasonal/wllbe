@@ -33,6 +33,18 @@ def test_project_store_writes_brief_and_expected_paths(tmp_path: Path) -> None:
     assert store.slide_specs_path == (store.root / "slide-specs.json")
 
 
+def test_project_store_page_outline_approval(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "runs" / "demo")
+    store.write_json("page-outline.generated.json", {"pages": [{"title": "Draft"}]})
+    edited = tmp_path / "edited-pages.json"
+    edited.write_text('{"pages": [{"title": "Approved"}]}', encoding="utf-8")
+
+    store.approve_artifact("page-outline", edited)
+
+    approved = store.read_json("page-outline.approved.json")
+    assert approved["pages"][0]["title"] == "Approved"
+
+
 def test_approve_chapter_outline_copies_user_edited_file(tmp_path: Path) -> None:
     store = ProjectStore(tmp_path / "runs" / "demo")
     store.write_json("chapter-outline.generated.json", {"chapters": [{"title": "Draft"}]})
