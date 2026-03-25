@@ -54,10 +54,33 @@ def test_approve_artifact_rejects_invalid_artifact_name(tmp_path: Path) -> None:
         store.approve_artifact("../chapter-outline", edited)
 
 
-def test_approve_artifact_requires_generated_file(tmp_path: Path) -> None:
+def test_approve_artifact_requires_generated_file_without_creating_project_root(
+    tmp_path: Path,
+) -> None:
     store = ProjectStore(tmp_path / "runs" / "demo")
     edited = tmp_path / "edited.json"
     edited.write_text('{}', encoding="utf-8")
 
     with pytest.raises(FileNotFoundError):
         store.approve_artifact("chapter-outline", edited)
+
+    assert not store.root.exists()
+
+
+def test_write_json_rejects_paths_outside_project_root(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "runs" / "demo")
+
+    with pytest.raises(ValueError):
+        store.write_json("../escaped.json", {"title": "Escaped"})
+
+    assert not (tmp_path / "runs" / "escaped.json").exists()
+
+
+def test_read_json_rejects_paths_outside_project_root(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "runs" / "demo")
+    escaped = tmp_path / "runs" / "escaped.json"
+    escaped.parent.mkdir(parents=True, exist_ok=True)
+    escaped.write_text('{"title": "Escaped"}', encoding="utf-8")
+
+    with pytest.raises(ValueError):
+        store.read_json("../escaped.json")

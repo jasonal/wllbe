@@ -41,15 +41,23 @@ class ProjectStore:
             encoding="utf-8",
         )
 
+    def _project_path(self, filename: str) -> Path:
+        root = self.root.resolve(strict=False)
+        path = (self.root / filename).resolve(strict=False)
+        if path == root or root not in path.parents:
+            raise ValueError(f"filename must stay within project root: {filename}")
+        return path
+
     def write_json(self, filename: str, payload: Any) -> None:
-        self.root.mkdir(parents=True, exist_ok=True)
-        (self.root / filename).write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        path = self._project_path(filename)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
     def read_json(self, filename: str) -> Any:
-        return json.loads((self.root / filename).read_text(encoding="utf-8"))
+        path = self._project_path(filename)
+        return json.loads(path.read_text(encoding="utf-8"))
 
     def approve_artifact(self, artifact_name: str, edited_path: Path) -> None:
-        self.root.mkdir(parents=True, exist_ok=True)
         valid_artifacts = {
             "chapter-outline": (self.chapter_outline_generated_path, self.chapter_outline_approved_path),
             "page-outline": (self.page_outline_generated_path, self.page_outline_approved_path),

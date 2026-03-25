@@ -97,6 +97,31 @@ def test_approve_chapters_reports_missing_generated_artifact(tmp_path: Path, cap
     assert "generated artifact" in captured.err
 
 
+def test_approve_chapters_reports_missing_project_without_creating_it(
+    tmp_path: Path,
+    capsys,
+) -> None:
+    project = tmp_path / "runs" / "demo"
+    input_path = tmp_path / "edited-chapters.json"
+    input_path.write_text('{"chapters":[{"title":"Approved"}]}', encoding="utf-8")
+
+    exit_code = main(
+        [
+            "approve",
+            "chapters",
+            "--project",
+            str(project),
+            "--input",
+            str(input_path),
+        ]
+    )
+
+    captured = capsys.readouterr()
+    assert exit_code == 1
+    assert "generated artifact" in captured.err
+    assert not project.exists()
+
+
 def test_approve_chapters_reports_missing_input(tmp_path: Path, capsys) -> None:
     project = tmp_path / "runs" / "demo"
     project.mkdir(parents=True, exist_ok=True)
@@ -117,3 +142,34 @@ def test_approve_chapters_reports_missing_input(tmp_path: Path, capsys) -> None:
     captured = capsys.readouterr()
     assert exit_code == 1
     assert "missing-input" in captured.err
+
+
+def test_approve_chapters_reports_directory_input(tmp_path: Path, capsys) -> None:
+    project = tmp_path / "runs" / "demo"
+    project.mkdir(parents=True, exist_ok=True)
+    (project / "chapter-outline.generated.json").write_text("{}", encoding="utf-8")
+    input_dir = tmp_path / "edited-dir"
+    input_dir.mkdir()
+
+    exit_code = main(
+        [
+            "approve",
+            "chapters",
+            "--project",
+            str(project),
+            "--input",
+            str(input_dir),
+        ]
+    )
+
+    captured = capsys.readouterr()
+    assert exit_code == 1
+    assert "edited-dir" in captured.err
+
+
+def test_approve_rejects_unknown_target(capsys) -> None:
+    exit_code = main(["approve", "sections"])
+
+    captured = capsys.readouterr()
+    assert exit_code == 2
+    assert "unknown approve target: sections" in captured.out
