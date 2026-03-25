@@ -50,5 +50,15 @@ class ProjectStore:
 
     def approve_artifact(self, artifact_name: str, edited_path: Path) -> None:
         self.root.mkdir(parents=True, exist_ok=True)
-        target = self.root / f"{artifact_name}.approved.json"
-        shutil.copyfile(edited_path, target)
+        valid_artifacts = {
+            "chapter-outline": (self.chapter_outline_generated_path, self.chapter_outline_approved_path),
+            "page-outline": (self.page_outline_generated_path, self.page_outline_approved_path),
+        }
+        if artifact_name not in valid_artifacts:
+            raise ValueError(f"invalid artifact name: {artifact_name}")
+
+        generated_path, approved_path = valid_artifacts[artifact_name]
+        if not generated_path.exists():
+            raise FileNotFoundError(f"generated artifact not found: {generated_path}")
+
+        shutil.copyfile(edited_path, approved_path)

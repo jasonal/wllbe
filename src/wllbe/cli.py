@@ -45,7 +45,12 @@ def _run_approve(argv: list[str]) -> int:
         return 1
 
     store = ProjectStore(Path(project))
-    store.approve_artifact(artifact_name, Path(input_path))
+    try:
+        store.approve_artifact(artifact_name, Path(input_path))
+    except (ValueError, FileNotFoundError) as exc:
+        print(f"approval failed: {exc}", file=sys.stderr)
+        return 1
+
     return 0
 
 

@@ -2,6 +2,8 @@ import json
 from dataclasses import asdict
 from pathlib import Path
 
+import pytest
+
 from wllbe.domain.brief import Brief
 from wllbe.projects.store import ProjectStore
 
@@ -41,3 +43,21 @@ def test_approve_chapter_outline_copies_user_edited_file(tmp_path: Path) -> None
 
     approved = store.read_json("chapter-outline.approved.json")
     assert approved["chapters"][0]["title"] == "Approved"
+
+
+def test_approve_artifact_rejects_invalid_artifact_name(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "runs" / "demo")
+    edited = tmp_path / "edited.json"
+    edited.write_text('{}', encoding="utf-8")
+
+    with pytest.raises(ValueError):
+        store.approve_artifact("../chapter-outline", edited)
+
+
+def test_approve_artifact_requires_generated_file(tmp_path: Path) -> None:
+    store = ProjectStore(tmp_path / "runs" / "demo")
+    edited = tmp_path / "edited.json"
+    edited.write_text('{}', encoding="utf-8")
+
+    with pytest.raises(FileNotFoundError):
+        store.approve_artifact("chapter-outline", edited)

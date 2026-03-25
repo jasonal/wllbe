@@ -31,6 +31,8 @@ def test_run_module_invokes_main():
 
 def test_approve_chapters_command_copies_input_json(tmp_path: Path):
     project = tmp_path / "runs" / "demo"
+    project.mkdir(parents=True, exist_ok=True)
+    (project / "chapter-outline.generated.json").write_text("{}", encoding="utf-8")
     input_path = tmp_path / "edited-chapters.json"
     input_path.write_text('{"chapters":[{"title":"Approved Chapter"}]}', encoding="utf-8")
 
@@ -52,6 +54,8 @@ def test_approve_chapters_command_copies_input_json(tmp_path: Path):
 
 def test_approve_pages_command_copies_input_json(tmp_path: Path):
     project = tmp_path / "runs" / "demo"
+    project.mkdir(parents=True, exist_ok=True)
+    (project / "page-outline.generated.json").write_text("{}", encoding="utf-8")
     input_path = tmp_path / "edited-pages.json"
     input_path.write_text('{"pages":[{"title":"Approved Page"}]}', encoding="utf-8")
 
@@ -69,3 +73,47 @@ def test_approve_pages_command_copies_input_json(tmp_path: Path):
     assert exit_code == 0
     approved_path = project / "page-outline.approved.json"
     assert approved_path.read_text(encoding="utf-8") == input_path.read_text(encoding="utf-8")
+
+
+def test_approve_chapters_reports_missing_generated_artifact(tmp_path: Path, capsys) -> None:
+    project = tmp_path / "runs" / "demo"
+    project.mkdir(parents=True, exist_ok=True)
+    input_path = tmp_path / "edited-chapters.json"
+    input_path.write_text('{"chapters":[{"title":"Approved"}]}', encoding="utf-8")
+
+    exit_code = main(
+        [
+            "approve",
+            "chapters",
+            "--project",
+            str(project),
+            "--input",
+            str(input_path),
+        ]
+    )
+
+    captured = capsys.readouterr()
+    assert exit_code == 1
+    assert "generated artifact" in captured.err
+
+
+def test_approve_chapters_reports_missing_input(tmp_path: Path, capsys) -> None:
+    project = tmp_path / "runs" / "demo"
+    project.mkdir(parents=True, exist_ok=True)
+    (project / "chapter-outline.generated.json").write_text("{}", encoding="utf-8")
+    missing_input = tmp_path / "missing-input.json"
+
+    exit_code = main(
+        [
+            "approve",
+            "chapters",
+            "--project",
+            str(project),
+            "--input",
+            str(missing_input),
+        ]
+    )
+
+    captured = capsys.readouterr()
+    assert exit_code == 1
+    assert "missing-input" in captured.err
