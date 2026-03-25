@@ -26,10 +26,10 @@ def _parse_page(page_payload: Any) -> Page:
     if not isinstance(page_payload, dict):
         raise ValueError("page payload must be an object")
 
-    page_id = _normalize_text(page_payload["page_id"])
-    chapter_id = _normalize_text(page_payload["chapter_id"])
-    title = _normalize_text(page_payload["title"])
-    message = _normalize_text(page_payload["message"])
+    page_id = _ensure_string("page_id", page_payload["page_id"])
+    chapter_id = _ensure_string("chapter_id", page_payload["chapter_id"])
+    title = _ensure_string("title", page_payload["title"])
+    message = _ensure_string("message", page_payload["message"])
 
     content_blocks_payload = page_payload.get("content_blocks", [])
     layout_hints_payload = page_payload.get("layout_hints", [])
@@ -49,7 +49,7 @@ def _parse_page(page_payload: Any) -> Page:
     )
 
 
-def _normalize_text(value: Any) -> str:
+def _ensure_string(field_name: str, value: Any) -> str:
     if not isinstance(value, str):
-        raise ValueError("text field must be a string")
-    return " ".join(value.split())
+        raise ValueError(f"{field_name} must be a string")
+    return value

@@ -39,10 +39,15 @@ def test_project_store_page_outline_approval(tmp_path: Path) -> None:
     edited = tmp_path / "edited-pages.json"
     edited.write_text('{"pages": [{"title": "Approved"}]}', encoding="utf-8")
 
+    generated = store.read_json("page-outline.generated.json")
+    assert generated["pages"][0]["title"] == "Draft"
+    assert store.page_outline_generated_path.exists()
+
     store.approve_artifact("page-outline", edited)
 
     approved = store.read_json("page-outline.approved.json")
     assert approved["pages"][0]["title"] == "Approved"
+    assert store.page_outline_approved_path.exists()
 
 
 def test_approve_chapter_outline_copies_user_edited_file(tmp_path: Path) -> None:

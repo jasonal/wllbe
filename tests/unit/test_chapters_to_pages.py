@@ -13,6 +13,7 @@ def test_generate_page_outline_returns_page_objects():
 
     assert result.pages[0].title == "The market is fragmented"
     assert result.pages[0].message == "Teams are stuck stitching together too many tools."
+    assert result.pages[0].layout_hints == ["comparison"]
     assert provider.calls == [("chapters_to_pages", approved_chapters)]
 
 
@@ -49,7 +50,7 @@ def test_generate_page_requires_page_objects():
         generate_page_outline({}, provider)
 
 
-def test_generate_page_sanitizes_text_and_validates_lists():
+def test_generate_page_accepts_raw_text_and_validates_lists():
     provider = FakeGenerationProvider(
         responses={
             "chapters_to_pages": {
@@ -68,7 +69,7 @@ def test_generate_page_sanitizes_text_and_validates_lists():
     )
 
     result = generate_page_outline({}, provider)
-    assert result.pages[0].page_id == "p1"
-    assert result.pages[0].chapter_id == "c1"
+    assert result.pages[0].page_id == " p1 "
+    assert result.pages[0].chapter_id == " c1 "
     assert result.pages[0].content_blocks == []
     assert result.pages[0].layout_hints == []
