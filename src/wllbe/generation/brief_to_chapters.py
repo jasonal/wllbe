@@ -13,9 +13,11 @@ def generate_chapter_outline(raw_brief: str, provider: GenerationProvider) -> Ch
 
 
 def _parse_chapter_outline(payload: dict[str, Any]) -> ChapterOutline:
-    chapters_payload = payload.get("chapters", [])
+    if "chapters" not in payload:
+        raise ValueError("chapter outline payload missing required 'chapters' field")
+    chapters_payload = payload["chapters"]
     if not isinstance(chapters_payload, list):
-        raise ValueError("chapters payload must be a list")
+        raise ValueError("chapter outline payload 'chapters' must be a list")
 
     chapters = [_parse_chapter(chapter_payload) for chapter_payload in chapters_payload]
     goal = _normalize_optional_text(payload.get("goal"))
