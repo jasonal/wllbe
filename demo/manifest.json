@@ -1,0 +1,23 @@
+{
+  "title": "wllbe (韦编) 系统演示",
+  "defaults": {
+    "palette": "./palettes/dark-pro.css",
+    "style": "./styles/glassmorphism.css",
+    "master": "tech",
+    "transition": "fade",
+    "animation": "smooth"
+  },
+  "canvas": {
+    "width": 960,
+    "height": 540,
+    "unit": "px"
+  },
+  "slides": [
+    { "data": "slide-1.json" },
+    { "data": "slide-2.json" },
+    { "data": "slide-3.json" },
+    { "data": "slide-4.json" },
+    { "data": "slide-5.json" },
+    { "data": "slide-6.json" }
+  ]
+}

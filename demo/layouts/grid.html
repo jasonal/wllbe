@@ -1,0 +1,13 @@
+<section class="l-slide w-full h-full flex flex-col p-10 gap-6 relative overflow-hidden" id="slide-3">
+    <div class="l-master-anchor"></div>
+    
+    <h2 class="s-title relative z-10" data-field="title" data-motion="fade-up"></h2>
+    
+    <div class="w-full grid grid-cols-3 gap-6 flex-1 items-stretch relative z-10" data-field-list="items" data-motion="stagger-up" data-delay="200">
+        <!-- Template for items, engine will clone this -->
+        <div class="s-card w-full h-full flex flex-col data-template">
+            <h3 class="s-highlight mb-2 text-xl font-bold" data-item-field="tag"></h3>
+            <p class="s-text-body text-sm flex-1 mt-2" data-item-field="text"></p>
+        </div>
+    </div>
+</section>

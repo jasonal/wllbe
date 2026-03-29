@@ -1,0 +1,7 @@
+{
+  "meta": { "layout": "cover", "master": "tech" },
+  "content": {
+    "title": "HTML PPT 完全体架构",
+    "subtitle": "母版隔离 / 多轨动效 / JSON 数据驱动"
+  }
+}

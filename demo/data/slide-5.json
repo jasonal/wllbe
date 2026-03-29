@@ -1,0 +1,14 @@
+{
+  "meta": { "layout": "stats", "master": "default" },
+  "content": {
+    "title": "核心生产力指标",
+    "stat_1_val": "99.9%",
+    "stat_1_lab": "系统可用性",
+    "stat_2_val": "10ms",
+    "stat_2_lab": "内容渲染延迟",
+    "stat_3_val": "0",
+    "stat_3_lab": "冗余代码残余",
+    "stat_4_val": "∞",
+    "stat_4_lab": "场景复用潜力"
+  }
+}

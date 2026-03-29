@@ -1,0 +1,11 @@
+{
+  "meta": { "layout": "grid", "master": "tech" },
+  "content": {
+    "title": "三格矩阵结构",
+    "items": [
+      { "tag": "Architecture", "text": "分离式的母版与动效层级" },
+      { "tag": "Logic", "text": "JSON 驱动的字段映射" },
+      { "tag": "Design", "text": "Tailwind 赋能的容器响应式" }
+    ]
+  }
+}

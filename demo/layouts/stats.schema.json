@@ -1,0 +1,92 @@
+{
+  "layout": "stats",
+  "version": "1.0",
+
+  "identity": {
+    "name": "数据指标",
+    "category": "data",
+    "description": "四列等分的大字号数据展示板。每列包含一个核心指标数值和对应标签，适合用一组关键数字一目了然地传达成果或状态。",
+    "best_for": ["KPI 展示", "季度成果", "性能基准", "里程碑数据", "产品数据概览"],
+    "not_for": ["叙述性内容", "流程步骤", "功能介绍"]
+  },
+
+  "capacity": {
+    "content_density": "low",
+    "visual_weight": "number-dominant",
+    "text_volume": "minimal"
+  },
+
+  "fields": {
+    "title": {
+      "type": "text",
+      "required": true,
+      "role": "数据板标题",
+      "constraints": { "max_length": 15, "ideal_length": "4-10 字符" },
+      "examples": ["核心指标", "本季度成果", "系统性能"]
+    },
+    "stat_1_val": {
+      "type": "text",
+      "required": true,
+      "role": "第 1 个大字号指标值",
+      "constraints": { "max_length": 8, "ideal_length": "1-6 字符" },
+      "examples": ["99.9%", "10ms", "1.2M", "∞"]
+    },
+    "stat_1_lab": {
+      "type": "text",
+      "required": true,
+      "role": "第 1 个指标的标签说明",
+      "constraints": { "max_length": 15, "ideal_length": "3-8 字符" },
+      "examples": ["可用性", "渲染延迟", "日活跃用户"]
+    },
+    "stat_2_val": {
+      "type": "text",
+      "required": true,
+      "role": "第 2 个大字号指标值",
+      "constraints": { "max_length": 8 },
+      "examples": ["50+", "3x", "< 1s"]
+    },
+    "stat_2_lab": {
+      "type": "text",
+      "required": true,
+      "role": "第 2 个指标的标签说明",
+      "constraints": { "max_length": 15 },
+      "examples": ["布局模板", "性能提升", "首屏加载"]
+    },
+    "stat_3_val": {
+      "type": "text",
+      "required": true,
+      "role": "第 3 个大字号指标值",
+      "constraints": { "max_length": 8 },
+      "examples": ["0", "24/7", "A+"]
+    },
+    "stat_3_lab": {
+      "type": "text",
+      "required": true,
+      "role": "第 3 个指标的标签说明",
+      "constraints": { "max_length": 15 },
+      "examples": ["技术债务", "服务保障", "安全评级"]
+    },
+    "stat_4_val": {
+      "type": "text",
+      "required": true,
+      "role": "第 4 个大字号指标值",
+      "constraints": { "max_length": 8 },
+      "examples": ["100%", "↑ 47%", "🚀"]
+    },
+    "stat_4_lab": {
+      "type": "text",
+      "required": true,
+      "role": "第 4 个指标的标签说明",
+      "constraints": { "max_length": 15 },
+      "examples": ["覆盖率", "季度增长", "就绪状态"]
+    }
+  },
+
+  "lists": {},
+
+  "ai_guidance": {
+    "selection_hint": "当用户的内容中包含 3-4 个关键数字指标（如百分比、时间、数量）时，应选择此布局。",
+    "content_adaptation": "从用户内容中提取最具冲击力的 4 个数字。数值缩写为最简形式（如 1,200,000 → 1.2M）。标签用 3-8 字符解释该数字的含义。",
+    "tone": "数据导向，简洁有力"
+  }
+}

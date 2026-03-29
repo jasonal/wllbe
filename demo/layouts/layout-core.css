@@ -1,0 +1,31 @@
+/* Layout Core — Base boundaries for slide context.
+   Canvas dimensions are CSS variables, configurable by engine or manifest. */
+
+:root {
+  --slide-width: 960px;
+  --slide-height: 540px;
+}
+
+.l-slide-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  perspective: 1200px;
+  background: var(--color-bg-base);
+}
+
+.l-slide {
+  width: var(--slide-width);
+  height: var(--slide-height);
+  display: none !important;
+  position: relative;
+}
+
+.l-slide.active {
+  display: flex !important;
+}
+

@@ -1,0 +1,73 @@
+{
+  "layout": "grid",
+  "version": "1.0",
+
+  "identity": {
+    "name": "卡片矩阵",
+    "category": "grid",
+    "description": "等分三列卡片网格。每张卡片包含标签标题+正文描述，适合展示 3 个并列且地位相同的概念、特性或分类。",
+    "best_for": ["特性罗列", "方案对比", "分类展示", "团队介绍", "产品矩阵"],
+    "not_for": ["单一重点强调", "长篇叙述", "有先后顺序的流程"]
+  },
+
+  "capacity": {
+    "content_density": "medium",
+    "visual_weight": "evenly-distributed",
+    "text_volume": "moderate"
+  },
+
+  "fields": {
+    "title": {
+      "type": "text",
+      "required": true,
+      "role": "页面标题 — 概括三列卡片的总主题",
+      "constraints": {
+        "min_length": 2,
+        "max_length": 15,
+        "ideal_length": "4-10 字符",
+        "line_count": 1
+      },
+      "examples": ["三大核心支柱", "技术栈选型", "部门概览"]
+    }
+  },
+
+  "lists": {
+    "items": {
+      "required": true,
+      "role": "卡片内容列表 — 每个元素代表一张独立卡片",
+      "item_count": {
+        "min": 2,
+        "max": 4,
+        "ideal": 3
+      },
+      "item_fields": {
+        "tag": {
+          "type": "text",
+          "required": true,
+          "role": "卡片标签/标题 — 简短的关键词",
+          "constraints": {
+            "max_length": 15,
+            "ideal_length": "2-8 字符"
+          },
+          "examples": ["架构", "性能", "设计"]
+        },
+        "text": {
+          "type": "text",
+          "required": true,
+          "role": "卡片正文 — 对标签的展开说明",
+          "constraints": {
+            "max_length": 80,
+            "ideal_length": "15-40 字符"
+          },
+          "examples": ["分离式的母版与动效层级，实现六维解耦"]
+        }
+      }
+    }
+  },
+
+  "ai_guidance": {
+    "selection_hint": "当用户的内容可以被拆分为 2-4 个地位相同、互相并列的概念或要点时，应选择此布局。",
+    "content_adaptation": "将用户的内容拆分为恰好 3 个卡片（如果超过 4 个，考虑合并或拆页）。每张卡片的 tag 用 2-8 字符的关键词概括，text 用 15-40 字符展开说明。",
+    "tone": "精炼概括，每卡片独立成意"
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "layout": "bento",
+  "version": "1.0",
+
+  "identity": {
+    "name": "Bento 网格",
+    "category": "composite",
+    "description": "苹果风格的不等分复合网格。左上角为 2×2 的主题卡片区，右上有横幅标语区，下方有两个小型指标格和一个全宽通栏。适合在一个页面内展示多层次、多维度的信息。",
+    "best_for": ["功能总览", "产品发布", "仪表盘摘要", "年度回顾", "项目概况"],
+    "not_for": ["单一主题叙述", "流程步骤", "纯数据列表"]
+  },
+
+  "capacity": {
+    "content_density": "high",
+    "visual_weight": "multi-focal",
+    "text_volume": "varied"
+  },
+
+  "fields": {
+    "title": {
+      "type": "text",
+      "required": true,
+      "role": "页面大标题",
+      "constraints": { "max_length": 15, "ideal_length": "4-10 字符" },
+      "examples": ["功能总览", "产品亮点", "年度回顾"]
+    },
+    "hero_box_title": {
+      "type": "text",
+      "required": true,
+      "role": "主题卡片标题 — 左上角 2×2 大区域的醒目标题",
+      "constraints": { "max_length": 10, "ideal_length": "3-6 字符" },
+      "examples": ["极大自由度", "核心引擎", "全栈覆盖"]
+    },
+    "hero_box_text": {
+      "type": "text",
+      "required": false,
+      "role": "主题卡片描述 — 对主题标题的展开说明",
+      "constraints": { "max_length": 80, "ideal_length": "20-50 字符" },
+      "examples": ["支持在 JSON 中定义复杂的对象结构来填充错落有致的区域"]
+    },
+    "medium_banner": {
+      "type": "text",
+      "required": false,
+      "role": "横幅标语 — 右上区域的 Slogan 或摘要",
+      "constraints": { "max_length": 30, "ideal_length": "8-20 字符" },
+      "examples": ["解耦架构 · 灵活组装 · 无限扩展"]
+    },
+    "stats_box_1": {
+      "type": "text",
+      "required": false,
+      "role": "小指标格 1 — 简短的数字或符号",
+      "constraints": { "max_length": 8 },
+      "examples": ["100%", "v3.1", "🎯"]
+    },
+    "stats_box_2": {
+      "type": "text",
+      "required": false,
+      "role": "小指标格 2 — 简短的数字或符号",
+      "constraints": { "max_length": 8 },
+      "examples": ["🚀", "24h", "A+"]
+    },
+    "footer_text": {
+      "type": "text",
+      "required": false,
+      "role": "底部通栏文字 — 补充说明或注脚",
+      "constraints": { "max_length": 50, "ideal_length": "10-30 字符" },
+      "examples": ["底部满幅通栏内容区域"]
+    }
+  },
+
+  "lists": {},
+
+  "ai_guidance": {
+    "selection_hint": "当用户的内容包含多个层次的信息（一个主要观点、一条标语、几个小指标、一段补充说明），且希望在一页中全部呈现时，应选择此布局。",
+    "content_adaptation": "按重要性分配内容：最核心的观点放 hero_box（标题+描述），概括性标语放 medium_banner，量化指标放 stats_box，补充信息放 footer_text。如果用户内容不够填满所有区域，非必填字段可留空。",
+    "tone": "层次分明，每个区块独立表意"
+  }
+}

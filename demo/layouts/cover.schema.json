@@ -1,0 +1,53 @@
+{
+  "layout": "cover",
+  "version": "1.0",
+
+  "identity": {
+    "name": "居中封面",
+    "category": "cover",
+    "description": "极简居中布局，适合一句话定调的开场页或章节分隔页。视觉重心在屏幕正中央，强调标题的冲击力。",
+    "best_for": ["开场页", "结尾页", "章节过渡", "Slogan 展示", "产品发布"],
+    "not_for": ["密集数据", "多段落正文", "列表展示"]
+  },
+
+  "capacity": {
+    "content_density": "low",
+    "visual_weight": "title-dominant",
+    "text_volume": "minimal"
+  },
+
+  "fields": {
+    "title": {
+      "type": "text",
+      "required": true,
+      "role": "主标题 — 页面唯一的视觉焦点",
+      "constraints": {
+        "min_length": 2,
+        "max_length": 20,
+        "ideal_length": "4-12 字符",
+        "line_count": 1
+      },
+      "examples": ["韦编三绝", "重新定义演示", "Q4 战略发布会"]
+    },
+    "subtitle": {
+      "type": "text",
+      "required": false,
+      "role": "副标题 — 对主标题的补充说明或关键词罗列",
+      "constraints": {
+        "min_length": 0,
+        "max_length": 60,
+        "ideal_length": "10-30 字符",
+        "line_count": 1
+      },
+      "examples": ["数据驱动 / 解耦架构 / 极致体验", "2026 年度技术路线图"]
+    }
+  },
+
+  "lists": {},
+
+  "ai_guidance": {
+    "selection_hint": "当用户的内容只有一个核心短语或标题，且没有详细的解释性段落时，应选择此布局。",
+    "content_adaptation": "将用户提供的核心信息浓缩为一句话标题（不超过 20 字符）。如果原始内容有补充说明，提炼为不超过 60 字符的副标题。",
+    "tone": "简洁有力，避免长句"
+  }
+}

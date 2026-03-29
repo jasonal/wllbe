@@ -1,0 +1,60 @@
+{
+  "version": "1.0",
+  "total": 6,
+  "layouts": [
+    {
+      "id": "cover",
+      "name": "居中封面",
+      "category": "cover",
+      "content_density": "low",
+      "best_for": ["开场页", "结尾页", "章节过渡", "Slogan 展示"],
+      "visual_weight": "title-dominant",
+      "tags": ["极简", "冲击力", "大号文字"]
+    },
+    {
+      "id": "split",
+      "name": "左右分栏",
+      "category": "content",
+      "content_density": "medium",
+      "best_for": ["功能介绍", "产品特性", "概念解释", "案例展示"],
+      "visual_weight": "balanced",
+      "tags": ["图文并茂", "经典", "解释型"]
+    },
+    {
+      "id": "grid",
+      "name": "卡片矩阵",
+      "category": "grid",
+      "content_density": "medium",
+      "best_for": ["特性罗列", "方案对比", "分类展示", "产品矩阵"],
+      "visual_weight": "evenly-distributed",
+      "tags": ["多维", "模块化", "清晰"]
+    },
+    {
+      "id": "stats",
+      "name": "数据指标",
+      "category": "data",
+      "content_density": "low",
+      "best_for": ["KPI 展示", "季度成果", "性能基准", "里程碑数据"],
+      "visual_weight": "number-dominant",
+      "tags": ["量化", "客观", "冲击力"]
+    },
+    {
+      "id": "bento",
+      "name": "Bento 网格",
+      "category": "composite",
+      "content_density": "high",
+      "best_for": ["功能总览", "产品发布", "仪表盘摘要", "年度回顾"],
+      "visual_weight": "multi-focal",
+      "tags": ["Apple-style", "多层次", "紧凑"]
+    },
+    {
+      "id": "timeline",
+      "name": "时间线",
+      "category": "flow",
+      "content_density": "medium",
+      "best_for": ["发展历程", "操作步骤", "实施路线", "版本迭代"],
+      "visual_weight": "sequential",
+      "tags": ["有序", "逻辑", "演进"]
+    }
+  ]
+}

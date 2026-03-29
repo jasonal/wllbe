@@ -1,0 +1,62 @@
+{
+  "layout": "timeline",
+  "version": "1.0",
+
+  "identity": {
+    "name": "时间线",
+    "category": "flow",
+    "description": "纵向排列的流程步骤布局。每个步骤由圆形序号+描述卡片组成，偶数行自动镜像排列（左右交错）。适合展示有先后顺序的进程、阶段或里程碑。",
+    "best_for": ["发展历程", "操作步骤", "实施路线", "版本迭代", "项目里程碑"],
+    "not_for": ["并列对比", "无序要点", "纯数据展示"]
+  },
+
+  "capacity": {
+    "content_density": "medium",
+    "visual_weight": "sequential",
+    "text_volume": "moderate"
+  },
+
+  "fields": {
+    "title": {
+      "type": "text",
+      "required": true,
+      "role": "时间线标题",
+      "constraints": { "max_length": 15, "ideal_length": "4-10 字符" },
+      "examples": ["演进历程", "实施路线", "开发计划"]
+    }
+  },
+
+  "lists": {
+    "steps": {
+      "required": true,
+      "role": "步骤列表 — 按时间或逻辑顺序排列的节点",
+      "item_count": {
+        "min": 2,
+        "max": 5,
+        "ideal": 3
+      },
+      "item_fields": {
+        "idx": {
+          "type": "text",
+          "required": true,
+          "role": "步骤序号 — 显示在圆形标记中",
+          "constraints": { "max_length": 4 },
+          "examples": ["01", "02", "Q1", "α"]
+        },
+        "text": {
+          "type": "text",
+          "required": true,
+          "role": "步骤描述 — 该阶段的核心内容",
+          "constraints": { "max_length": 50, "ideal_length": "10-30 字符" },
+          "examples": ["引入 Tailwind 实现骨骼轻量化"]
+        }
+      }
+    }
+  },
+
+  "ai_guidance": {
+    "selection_hint": "当用户的内容描述了一个有明确先后顺序的过程（如历史、步骤、路线图）时，应选择此布局。",
+    "content_adaptation": "将过程拆分为 3-5 个关键节点。用递增的序号标记（01/02/03 或 Q1/Q2/Q3）。每个节点的描述控制在 50 字符以内，用一句话概括该阶段的核心变化。",
+    "tone": "时序清晰，每步骤一句话"
+  }
+}

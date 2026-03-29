@@ -1,0 +1,13 @@
+:root {
+  --color-bg-base: #f0f4f8;
+  --color-surface: #ffffff;
+  --color-primary: #007aff;
+  --color-primary-light: #e0f0ff;
+  --color-text-main: #1d1d1f;
+  --color-text-subtle: #86868b;
+  --color-border: #d2d2d7;
+  --shadow-base: rgba(0, 0, 0, 0.05);
+  --shadow-elevated: rgba(0, 0, 0, 0.1);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.5);
+}

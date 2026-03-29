@@ -1,0 +1,71 @@
+/* Glassmorphism Style - STRICTLY NO LAYOUT ALTERATIONS */
+
+body {
+  /* Using base color from palette, but adding a subtle gradient for glass effect pop */
+  background: linear-gradient(135deg, var(--color-bg-base), var(--color-primary-light));
+  font-family: "Inter", -apple-system, sans-serif;
+  color: var(--color-text-main);
+  margin: 0;
+  transition: background 0.5s ease, color 0.5s ease;
+}
+
+.s-slide-bg {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 10px 40px var(--shadow-elevated);
+  border-radius: 32px; /* Smooth large radius */
+  border: 1px solid var(--glass-border);
+  border-top: 1px solid rgba(255,255,255,0.8); /* Inner light rim */
+  border-left: 1px solid rgba(255,255,255,0.8);
+}
+
+.s-hero-title {
+  font-size: 4rem;
+  font-weight: 900;
+  letter-spacing: -2px;
+  margin: 0 0 10px 0;
+  background: linear-gradient(45deg, var(--color-primary), var(--color-text-main));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.s-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  margin: 0 0 15px 0;
+  color: var(--color-text-main);
+  text-shadow: 0 2px 10px var(--shadow-base);
+}
+
+.s-text-body {
+  font-size: 1.25rem;
+  line-height: 1.5;
+  color: var(--color-text-subtle);
+  margin: 0;
+}
+
+.s-highlight {
+  color: var(--color-bg-base);
+  background-color: var(--color-primary);
+  padding: 2px 10px;
+  border-radius: 20px;
+}
+
+.s-card {
+  background: rgba(255,255,255, 0.03); /* Extremely subtle inner glass */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  padding: 24px;
+  border-radius: 20px;
+  box-shadow: inset 0 2px 20px var(--shadow-base);
+}
+
+.s-placeholder-box {
+  background: linear-gradient(135deg, var(--glass-bg), transparent);
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+  border-radius: 20px;
+  box-shadow: 0 4px 15px var(--shadow-base);
+}

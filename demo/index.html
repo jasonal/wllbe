@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>wllbe (韦编) 系统演示</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link id="palette-link" rel="stylesheet" href="./palettes/dark-pro.css">
+    <link rel="stylesheet" href="./layouts/layout-core.css">
+    <link id="style-link" rel="stylesheet" href="./styles/glassmorphism.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <style>
+        .demo-control-panel {
+            position: fixed; top: 20px; right: 20px; background: rgba(0,0,0,0.85);
+            color: white; padding: 18px; border-radius: 16px; z-index: 9999;
+            font-family: sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: flex; flex-direction: column; gap: 10px; width: 240px;
+            backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1);
+        }
+        .demo-control-panel label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+        .demo-control-panel select, .demo-control-panel button {
+            width: 100%; padding: 8px; border-radius: 8px; border: none; background: #222; color: #eee; cursor: pointer; font-size: 13px;
+        }
+        .demo-control-panel button.primary { background: #0a84ff; font-weight: bold; color: white; }
+        .demo-control-panel .toggle-group { display: flex; gap: 5px; }
+        .demo-control-panel .toggle-group button { font-size: 11px; padding: 5px; }
+        .demo-control-panel .toggle-group button.off { opacity: 0.4; background: #444; }
+
+        .slide-nav { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; gap: 15px; z-index: 9999; align-items: center; }
+        .slide-nav button { width: 44px; height: 44px; border-radius: 22px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.4); color: white; cursor: pointer; backdrop-filter: blur(10px); }
+        #page-indicator { color: white; font-family: monospace; font-size: 16px; min-width: 60px; text-align: center; }
+
+        #app-container { width: 100vw; height: 100vh; overflow: hidden; background: var(--color-bg-base); transition: background 0.3s; }
+        .loading-overlay { position: fixed; inset: 0; background: #000; display: flex; justify-content: center; align-items: center; z-index: 10000; transition: opacity 0.5s; }
+    </style>
+</head>
+<body class="bg-black">
+
+    <div id="loading" class="loading-overlay"><span class="text-white font-mono animate-pulse">BOOTING DECOUPLED ENGINE...</span></div>
+
+    <div class="demo-control-panel">
+        <label>System Style</label>
+        <select onchange="app.updatePalette(this.value)">
+            <option value="./palettes/dark-pro.css">Dark Pro (Default)</option>
+            <option value="./palettes/light-breeze.css">Light Breeze</option>
+        </select>
+        <select onchange="app.updateStyle(this.value)">
+            <option value="./styles/glassmorphism.css">Glassmorphism</option>
+            <option value="./styles/minimal-flat.css">Minimal Flat</option>
+        </select>
+
+        <label>Animation Style</label>
+        <select onchange="app.updateMotionPack(this.value)">
+            <option value="smooth">Anim: Smooth</option>
+            <option value="bouncy">Anim: Bouncy</option>
+        </select>
+
+        <label>Page Transition</label>
+        <select onchange="app.updateTransition(this.value)">
+            <option value="fade">Trans: Fade (Normal)</option>
+            <option value="slide">Trans: Slide (X-Axis)</option>
+            <option value="zoom">Trans: Zoom (Scale)</option>
+            <option value="flip">Trans: Flip (3D Rotate)</option>
+            <option value="convex">Trans: Convex (Y-Axis)</option>
+        </select>
+        
+        <label>Dual-Track Power</label>
+        <div class="toggle-group">
+            <button id="btn-anim" onclick="app.toggleAnim()">Anim: ON</button>
+            <button id="btn-trans" onclick="app.toggleTrans()">Trans: ON</button>
+        </div>
+
+        <label>Global Master</label>
+        <select onchange="app.updateAllMasters(this.value)">
+            <option value="default">Default: Minimal</option>
+            <option value="tech">Tech: Overlay Grid</option>
+        </select>
+        
+        <button class="primary" onclick="motionController.replay()">Replay In-Page</button>
+    </div>
+
+    <div class="slide-nav">
+        <button onclick="app.prev()">&lt;</button>
+        <span id="page-indicator">1 / 6</span>
+        <button onclick="app.next()">&gt;</button>
+    </div>
+
+    <div id="app-container"></div>
+
+    <script src="./motions/transitions/library.js"></script>
+    <script src="./motions/animations/pack-smooth.js"></script>
+    <script src="./motions/animations/pack-bouncy.js"></script>
+    <script src="./motions/controller.js"></script>
+
+    <script>
+        const app = {
+            current: 1,
+            total: 0,
+            slides: [],
+            manifest: null,
+            isAnimating: false,
+
+            async init() {
+                // 1. Fetch manifest — the single source of truth
+                const res = await fetch('./manifest.json');
+                this.manifest = await res.json();
+                this.total = this.manifest.slides.length;
+
+                // 2. Apply manifest defaults to UI
+                document.getElementById('palette-link').href = this.manifest.defaults.palette;
+                document.getElementById('style-link').href = this.manifest.defaults.style;
+                document.title = this.manifest.title;
+
+                // 3. Apply canvas dimensions from manifest
+                const root = document.documentElement;
+                root.style.setProperty('--slide-width', this.manifest.canvas.width + this.manifest.canvas.unit);
+                root.style.setProperty('--slide-height', this.manifest.canvas.height + this.manifest.canvas.unit);
+
+                // 4. Load all slides declared in manifest
+                const container = document.getElementById('app-container');
+                for(let i = 0; i < this.total; i++) {
+                    const slideConfig = this.manifest.slides[i];
+                    const slide = await this.loadSlide(slideConfig, i);
+                    this.slides.push(slide);
+                    container.appendChild(slide);
+                }
+
+                // 5. Boot complete
+                document.getElementById('loading').style.opacity = '0';
+                setTimeout(() => document.getElementById('loading').remove(), 500);
+                document.getElementById('page-indicator').innerText = `1 / ${this.total}`;
+
+                motionController.playAnimations();
+            },
+
+            async loadSlide(slideConfig, index) {
+                // 1. Fetch JSON Data
+                const resData = await fetch(`./data/${slideConfig.data}`);
+                const data = await resData.json();
+
+                // 2. Fetch Layout HTML
+                const resLayout = await fetch(`./layouts/${data.meta.layout}.html`);
+                const html = await resLayout.text();
+
+                // 3. Create Element & Inject Master Background
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const section = doc.body.firstChild;
+                
+                // Determine master: per-slide override > json meta > manifest default
+                const masterName = slideConfig.master || data.meta.master || this.manifest.defaults.master;
+                const resMaster = await fetch(`./masters/${masterName}.html`);
+                const masterHtml = await resMaster.text();
+                const anchor = section.querySelector('.l-master-anchor');
+                if(anchor) anchor.innerHTML = masterHtml;
+
+                // 4. Data Binding
+                this.bindData(section, data.content);
+
+                if(index > 0) section.style.display = 'none';
+                else section.classList.add('active');
+
+                return section;
+            },
+
+            bindData(el, content) {
+                // Simple Text Fields
+                el.querySelectorAll('[data-field]').forEach(node => {
+                    const key = node.getAttribute('data-field');
+                    if(content[key]) node.innerHTML = content[key];
+                });
+
+                // List Fields (Grid items, step items)
+                el.querySelectorAll('[data-field-list]').forEach(node => {
+                    const key = node.getAttribute('data-field-list');
+                    const items = content[key];
+                    if(!items || !Array.isArray(items)) return;
+
+                    const template = node.querySelector('.data-template');
+                    if(!template) return;
+                    template.classList.remove('data-template');
+                    node.innerHTML = '';
+
+                    items.forEach((itemData, idx) => {
+                        const item = template.cloneNode(true);
+                        if(key === 'steps' && idx % 2 !== 0) {
+                            item.classList.add('flex-row-reverse');
+                            const card = item.querySelector('.s-card');
+                            if(card) card.classList.add('flex', 'justify-end');
+                            const p = item.querySelector('p');
+                            if(p) p.classList.add('text-right');
+                        }
+                        item.querySelectorAll('[data-item-field]').forEach(subNode => {
+                            const subKey = subNode.getAttribute('data-item-field');
+                            if(itemData[subKey]) subNode.innerHTML = itemData[subKey];
+                        });
+                        node.appendChild(item);
+                    });
+                });
+            },
+
+            updatePalette(v) { document.getElementById('palette-link').href = v; },
+            updateStyle(v) { document.getElementById('style-link').href = v; },
+            updateMotionPack(v) { 
+                const p = (v === 'smooth') ? window.MotionPackSmooth : window.MotionPackBouncy;
+                motionController.setPack(p); 
+            },
+
+            updateTransition(v) {
+                const t = window.MotionTransitions[v];
+                if(t) motionController.setTransition(t);
+            },
+
+            toggleAnim() {
+                motionController.toggleAnimations(!motionController.enableAnimations);
+                document.getElementById('btn-anim').innerText = `Anim: ${motionController.enableAnimations ? 'ON' : 'OFF'}`;
+                document.getElementById('btn-anim').className = motionController.enableAnimations ? '' : 'off';
+            },
+            toggleTrans() {
+                motionController.toggleTransitions(!motionController.enableTransitions);
+                document.getElementById('btn-trans').innerText = `Trans: ${motionController.enableTransitions ? 'ON' : 'OFF'}`;
+                document.getElementById('btn-trans').className = motionController.enableTransitions ? '' : 'off';
+            },
+
+            async updateAllMasters(masterName) {
+                const res = await fetch(`./masters/${masterName}.html`);
+                const masterHtml = await res.text();
+                this.slides.forEach(slide => {
+                    const anchor = slide.querySelector('.l-master-anchor');
+                    if(anchor) anchor.innerHTML = masterHtml;
+                });
+            },
+
+            async goto(nextIndex) {
+                if(this.isAnimating || nextIndex === this.current) return;
+                this.isAnimating = true;
+
+                const prevSlide = this.slides[this.current - 1];
+                const nextSlide = this.slides[nextIndex - 1];
+                const direction = nextIndex > this.current ? 1 : -1;
+
+                prevSlide.classList.remove('active');
+                nextSlide.classList.add('active');
+
+                motionController.prepareSlide(nextSlide);
+                await motionController.transitionTo(nextSlide, prevSlide, direction);
+                
+                this.current = nextIndex;
+                this.isAnimating = false;
+                document.getElementById('page-indicator').innerText = `${this.current} / ${this.total}`;
+                
+                motionController.playAnimations();
+            },
+
+            next() { let n = this.current + 1; if(n > this.total) n = 1; this.goto(n); },
+            prev() { let n = this.current - 1; if(n < 1) n = this.total; this.goto(n); }
+        };
+
+        app.init();
+    </script>
+</body>
+</html>

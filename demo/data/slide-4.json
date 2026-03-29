@@ -1,0 +1,12 @@
+{
+  "meta": { "layout": "bento", "master": "tech" },
+  "content": {
+    "title": "跨级 Bento 网格",
+    "hero_box_title": "极大自由度",
+    "hero_box_text": "在 JSON 中，我们可以定义复杂的对象结构来填充这种错落有致的区域。",
+    "medium_banner": "解耦架构 · 灵活组装 · 无限扩展",
+    "stats_box_1": "100%",
+    "stats_box_2": "🚀",
+    "footer_text": "底部满幅通栏文字注入测试"
+  }
+}

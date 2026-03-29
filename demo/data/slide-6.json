@@ -1,0 +1,11 @@
+{
+  "meta": { "layout": "timeline", "master": "tech" },
+  "content": {
+    "title": "系统演进里程碑",
+    "steps": [
+      { "idx": "01", "text": "引入 Tailwind 实现骨骼轻量化" },
+      { "idx": "02", "text": "通过 AJAX 分离 HTML 模板模块" },
+      { "idx": "03", "text": "最终集成：数据驱动与母版控制" }
+    ]
+  }
+}

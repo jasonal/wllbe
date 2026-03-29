@@ -1,0 +1,53 @@
+{
+  "layout": "split",
+  "version": "1.0",
+
+  "identity": {
+    "name": "左右分栏",
+    "category": "content",
+    "description": "经典的左文右图分栏布局。左侧承载标题与描述性段落，右侧预留大面积媒体占位区（图片、视频、代码截图等）。适合需要'文字+配图'的解释型页面。",
+    "best_for": ["功能介绍", "产品特性", "概念解释", "案例展示", "前后对比"],
+    "not_for": ["纯数据指标", "多项列表", "流程步骤"]
+  },
+
+  "capacity": {
+    "content_density": "medium",
+    "visual_weight": "balanced",
+    "text_volume": "moderate"
+  },
+
+  "fields": {
+    "title": {
+      "type": "text",
+      "required": true,
+      "role": "页面标题 — 左侧区域的视觉起点",
+      "constraints": {
+        "min_length": 2,
+        "max_length": 20,
+        "ideal_length": "4-15 字符",
+        "line_count": 1
+      },
+      "examples": ["核心特性", "架构优势", "用户旅程"]
+    },
+    "description": {
+      "type": "text",
+      "required": true,
+      "role": "说明段落 — 对标题的展开论述，支持 HTML 标签（如 <code>）",
+      "constraints": {
+        "min_length": 20,
+        "max_length": 200,
+        "ideal_length": "50-120 字符",
+        "line_count": "2-5"
+      },
+      "examples": ["通过将数据与视觉完全分离，同一套布局可以被不同的 JSON 驱动，瞬间生成风格各异的页面。"]
+    }
+  },
+
+  "lists": {},
+
+  "ai_guidance": {
+    "selection_hint": "当用户的内容包含一个主题标题和一段解释性文字，并且最好配有插图或截图时，应选择此布局。",
+    "content_adaptation": "标题控制在 15 字以内。描述段落控制在 200 字以内，可使用 <code> 标签高亮技术术语。右侧媒体区由系统自动预留，无需在 JSON 中指定。",
+    "tone": "叙述性，可以较详细"
+  }
+}

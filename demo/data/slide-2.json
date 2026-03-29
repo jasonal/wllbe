@@ -1,0 +1,7 @@
+{
+  "meta": { "layout": "split", "master": "default" },
+  "content": {
+    "title": "数据与表现的终极分离",
+    "description": "现在，您的文字哪怕一个标点符号都不再留在 HTML 源代码里。所有的业务内容全部存放在 <code>data/*.json</code> 中。这让同一套版式可以由于不同的 JSON 数据输入，瞬间生成几十款不重样的 PPT 页面。"
+  }
+}
